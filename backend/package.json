@@ -1,0 +1,33 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "A backend for the CV Maker application",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slaven2910/cv-maker.git"
+  },
+  "keywords": [
+    "CV",
+    "Maker",
+    "backend",
+    "API"
+  ],
+  "author": "Slaven",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/slaven2910/cv-maker/issues"
+  },
+  "homepage": "https://github.com/slaven2910/cv-maker#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.2.0",
+    "mongoose": "^7.6.3"
+  }
+}
