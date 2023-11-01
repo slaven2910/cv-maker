@@ -1,0 +1,83 @@
+<style>
+    /* Custom styles for A4 paper size */
+    body {
+        background-color: #f0f0f0; /* Background color for the entire page */
+    }
+
+    .cv {
+        width: 21cm;
+        height: 29.7cm;
+        margin: 0 auto; /* Center the CV on the page */
+        background-color: white; /* Background color for the CV */
+    }
+</style>
+
+<div class="container my-4 border cv">
+    <div class="row">
+      <div class="col-md-4 bg-secondary text-light">
+    <img src="assets/profileImage.jpeg" class="mt-5 mb-3 rounded-circle img-thumbnail" alt="...">
+
+        <!-- Display contact information -->
+        <div class="contact-info">
+          <h2>Contact</h2>
+          <hr>
+          <p class="my-3"><strong>Name:</strong> {{ cvData.contactInfo.name }}</p>
+          <p class="my-3"><strong>Address:</strong> {{ cvData.contactInfo.address }}</p>
+          <p class="my-3"><strong>Email:</strong> {{ cvData.contactInfo.email }}</p>
+        </div>
+        <!-- Display skills -->
+        <div class="skills">
+          <h2 class="mt-4">Skills</h2>
+          <hr>
+          <ul>
+            <li *ngFor="let skill of cvData.skills">{{ skill }}</li>
+          </ul>
+        </div>
+        <!-- Display languages -->
+        <div class="languages">
+          <h2 class="mt-4">Languages</h2>
+          <hr>
+          <ul>
+            <li *ngFor="let language of cvData.languages">{{ language }}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-8 bg-light">
+        <!-- Display full name -->
+        <h1 class="text-center my-4">{{ cvData.contactInfo.name }}</h1>
+        <!-- Display about me -->
+        <div class="about-me">
+          <h2>About me</h2>
+          <hr>
+          <p>{{ cvData.aboutMe }}</p>
+        </div>
+        <!-- Display experience -->
+        <div class="experience">
+          <h2>Experience</h2>
+          <hr>
+          <div *ngFor="let exp of cvData.experience">
+            <p>{{ exp.position }}, {{ exp.company }}, {{ exp.startDate }} - {{ exp.endDate }}</p>
+            <p>{{ exp.description }}</p>
+          </div>
+        </div>
+        <!-- Display education -->
+        <div class="education">
+          <h2>Education</h2>
+          <hr>
+          <div *ngFor="let edu of cvData.education">
+            <p>{{ edu.degree }} in {{ edu.institution }}, {{ edu.startDate }} - {{ edu.endDate }}</p>
+            <p>{{ edu.description }}</p>
+          </div>
+        </div>
+        <!-- Display certifications -->
+        <div class="certifications">
+          <h2>Certifications</h2>
+          <hr>
+          <div *ngFor="let cert of cvData.certifications">
+            <p>{{ cert.name }}, {{ cert.issuer }}, {{ cert.date }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

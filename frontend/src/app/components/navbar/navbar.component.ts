@@ -13,7 +13,6 @@ export class NavbarComponent {
   constructor(private authService: AuthService, private router: Router) {
     this.authService.isLoggedIn().subscribe((isLoggedIn) => {
       this.isLoggedIn = isLoggedIn;
-      console.log(this.isLoggedIn)
     });
   }
 
