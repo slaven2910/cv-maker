@@ -7,230 +7,303 @@
   }
 
   .cv {
-      width: 21cm;
-      height: 29.7cm;
-      margin: 0 auto; /* Center the CV on the page */
-      background-color: white; /* Background color for the CV */
+    width: 21cm;
+    min-height: 29.7cm;
+    margin: 0 auto; /* Center the CV on the page */
+    background-color: gray; /* Background color for the entire CV */
+  }
+
+  .left-side {
+    min-height: 29.7cm;
+    background-color: rgb(179, 72, 72); /* Background color for the left-side */
   }
 </style>
 
-<div class="container my-4 border cv">
+<div class=" my-4 border cv">
+  <form [formGroup]="cvForm" (ngSubmit)="onSubmit" class="container">
+
   <div class="row">
-    <div class="col-md-4 bg-secondary text-light">
-    <img src="assets/profileImage.jpeg" class="mt-5 mb-3 rounded-circle img-thumbnail" alt="...">
+    <div class="col-md-4 bg-secondary text-light left-side">
+      <img src="assets/profileImage.jpeg" class="mt-5 mb-3 rounded-circle img-thumbnail" alt="...">
 
       <!-- Display contact information -->
-      <div class="contact-info" formGroupName="contactInfo">
-        <h2>Contact</h2>
-        <hr>
-        <div class="form-group input-group-sm pb-3">
-          <input type="text" id="contactName" placeholder="Full name" formControlName="name" class="form-control">
-        </div>
+      <div class="contact-info">
+          <h2>Contact</h2>
+          <div formGroupName="contactInfo">
+          <div class="form-group input-group-sm pb-3">
+            <input type="text" placeholder="Full name" formControlName="name" class="form-control">
+          </div>
 
-        <div class="form-group input-group-sm pb-3">
-          <input type="text" id="contactAddress" placeholder="Address" formControlName="address" class="form-control">
-        </div>
+          <div class="form-group input-group-sm pb-3">
+            <input type="text" placeholder="Address" formControlName="address" class="form-control">
+          </div>
 
-        <div class="form-group input-group-sm pb-3">
-          <input type="email" id="contactEmail" placeholder="Email" formControlName="email" class="form-control">
-        </div>
+          <div class="form-group input-group-sm pb-3">
+            <input type="email" placeholder="Email" formControlName="email" class="form-control">
+          </div>
 
-        <div class="form-group input-group-sm pb-3">
-          <input type="email" id="contactPhone" placeholder="Phone" formControlName="phone" class="form-control">
+          <div class="form-group input-group-sm pb-3">
+            <input type="email" placeholder="Phone" formControlName="phone" class="form-control">
+          </div>
         </div>
       </div>
       <!-- Display skills -->
       <div class="skills">
-        <h2 class="mt-4">Skills</h2>
+        <div class="row">
+          <div class="col-6">
+            <h2 class="">Skills</h2>
+          </div>
+        </div>
         <hr>
-        <div class="form-group input-group-sm pb-3">
-          <input type="text" id="skills" placeholder="e.g. Programming" formControlName="skills" class="form-control">
+        <div formArrayName="skills">
+          <div *ngFor="let skill of skillsControls; let i = index" [formGroupName]="i">
+            <div class="row">
+              <div class="col-md-8">
+                <div class="py-1">
+                  <input type="text" placeholder="e.g. Programming" formControlName="skill" class="form-control">
+                </div>
+              </div>
+                <div class="col-md-2">
+                  <div class="py-1">
+                    <button type="button" class="btn btn-sm btn-success" (click)="addSkill()">             
+                      +
+                    </button>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="py-1">
+                    <button type="button" class="btn btn-sm btn-danger" (click)="removeSkill(i)">
+                      -
+                    </button>
+                  </div>
+                </div>
+            </div>
+            
+          </div>
         </div>
       </div>
       <!-- Display languages -->
+
       <div class="languages">
-        <h2 class="mt-4">Languages</h2>
+        <div class="row py-2">
+          <div class="col-6">
+            <h2 class="">Languages</h2>
+          </div>
+        </div>
         <hr>
-        <div class="form-group input-group-sm pb-3">
-          <input type="text" id="languages" placeholder="e.g. German" formControlName="languages" class="form-control">
+        <div formArrayName="languages">
+          <div *ngFor="let language of languageControls; let i = index" [formGroupName]="i">
+            <div class="row">
+              <div class="col-md-8">
+                <div class="py-1">
+                  <input type="text" placeholder="e.g. German" formControlName="language" class="form-control">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="py-1">
+                  <button type="button" class="btn btn-sm btn-success" (click)="addLanguage()">             
+                    +
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="py-1">
+                  <button type="button" class="btn btn-sm btn-danger" (click)="removeLanguage(i)">
+                    -
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
     <div class="col-md-8 bg-light">
       <!-- Display full name -->
-      <h1 class="text-center my-4">{{ cvData.contactInfo.name }}</h1>
+      <h1 class="text-center my-4">{{ cvData?.contactInfo?.name }}</h1>
       <!-- Display about me -->
       <div class="about-me">
         <h2>About me</h2>
         <hr>
-
         <div class="form-group">
-          <textarea type="text" id="aboutMe" placeholder="About me..." formControlName="aboutMe" required class="form-control"></textarea>
+          <textarea placeholder="About me..." formControlName="aboutMe" required class="form-control"></textarea>
         </div>
+        <p>{{ cvData?.aboutMe }}</p>
+      </div>
 
-        <p>{{ cvData.aboutMe }}</p>
-      </div>
-      <!-- Display experience -->
-      <div class="experience">
-        <h2>Experience</h2>
-        <hr>
-        <div *ngFor="let exp of cvData.experience">
-          <p>{{ exp.position }}, {{ exp.company }}, {{ exp.startDate }} - {{ exp.endDate }}</p>
-          <p>{{ exp.description }}</p>
-        </div>
-      </div>
       <!-- Display education -->
-      <div class="education">
+
+      <div formArrayName="education">
         <h2>Education</h2>
         <hr>
-        <div *ngFor="let edu of cvData.education">
-          <p>{{ edu.degree }} in {{ edu.institution }}, {{ edu.startDate }} - {{ edu.endDate }}</p>
-          <p>{{ edu.description }}</p>
+        <div *ngFor="let education of educationControls; let i = index" [formGroupName]="i">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="py-1">
+                <input type="text" placeholder="e.g. Bachelor of Computer Science" formControlName="degree" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="py-1">
+                <input type="text" placeholder="e.g. University of Applied Sciences" formControlName="institution" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="py-1">
+                <input type="date" placeholder="e.g. 01.10.2018" formControlName="startDate" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="py-1">
+                <input type="date" placeholder="e.g. 01.05.2021" formControlName="endDate" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="py-1">
+                <button type="button" class="btn btn-outline-success " (click)="addEducation()">             
+                  +
+                </button>
+                <button type="button" class="btn btn-outline-danger mx-2" (click)="removeEducation(i)">
+                  -
+                </button>
+              </div>
+            </div>
+            
+          </div>
+          
         </div>
       </div>
+
+      <!-- Display experience -->
+
+      <div formArrayName="experience">
+        <h2>Experience</h2>
+        <hr>
+        <div *ngFor="let experience of experienceControls; let i = index" [formGroupName]="i">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="py-1">
+                <input type="text" placeholder="e.g. Finlex GmbH" formControlName="company" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="py-1">
+                <input type="text" placeholder="e.g. Frontend developer" formControlName="position" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="py-1">
+                <input type="date" placeholder="e.g. 01.10.2018" formControlName="startDate" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="py-1">
+                <input type="date" placeholder="e.g. 01.05.2021" formControlName="endDate" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="py-1">
+                <button type="button" class="btn btn-outline-success " (click)="addExperience()">             
+                  +
+                </button>
+                <button type="button" class="btn btn-outline-danger mx-2" (click)="removeExperience(i)">
+                  -
+                </button>
+              </div>
+            </div>
+            
+          </div>
+          
+        </div>
+      </div>
+      
       <!-- Display certifications -->
-      <div class="certifications">
+
+      <div formArrayName="certifications">
         <h2>Certifications</h2>
         <hr>
-        <div *ngFor="let cert of cvData.certifications">
-          <p>{{ cert.name }}, {{ cert.issuer }}, {{ cert.date }}</p>
+        <div *ngFor="let certificate of certificationControls; let i = index" [formGroupName]="i">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="py-1">
+                <input type="text" placeholder="e.g. Example name" formControlName="name" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="py-1">
+                <input type="text" placeholder="e.g. Example issuer" formControlName="issuer" class="form-control">
+              </div>
+            </div>
+          </div>  
+          <div class="row justify-content-between">
+            <div class="col-md-6">
+              <div class="py-1">
+                <input type="date" placeholder="e.g. 20.10.2023" formControlName="date" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="py-1">
+                <button type="button" class="btn btn-outline-success " (click)="addCertification()">             
+                  +
+                </button>
+                <button type="button" class="btn btn-outline-danger mx-2" (click)="removeCertification(i)">
+                  -
+                </button>
+              </div>
+            </div>
+          </div>        
+        </div>
+      </div>
+
+      <!-- Display references -->
+
+      <div formArrayName="references">
+        <h2>References</h2>
+        <hr>
+        <div *ngFor="let reference of referencesControls; let i = index" [formGroupName]="i">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="py-1">
+                <input type="text" placeholder="e.g. Example name" formControlName="name" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="py-1">
+                <input type="text" placeholder="e.g. Example position" formControlName="position" class="form-control">
+              </div>
+            </div>
+          </div>  
+          <div class="row justify-content-between">
+            <div class="col-md-6">
+              <div class="py-1">
+                <input type="text" placeholder="e.g. example@email.de" formControlName="contact" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="py-1">
+                <button type="button" class="btn btn-outline-success " (click)="addReference()">             
+                  +
+                </button>
+                <button type="button" class="btn btn-outline-danger mx-2" (click)="removeReference(i)">
+                  -
+                </button>
+              </div>
+            </div>
+          </div>        
         </div>
       </div>
     </div>
   </div>
+
+  <div class="row">
+    <div class="col-md-12 text-center my-3">
+      <button type="button" class="btn btn-primary" (click)="logFormData()">Log Form Data</button>
+    </div>
+  </div>
+  </form>
 </div>
-
-
-
-<form [formGroup]="cvForm" (ngSubmit)="onSubmit" class="container mt-4">
-
-  <h2>Contact</h2>
-
-  <div formGroupName="contactInfo">
-    <div class="form-group">
-      <label for="contactName">Name:</label>
-      <input type="text" id="contactName" formControlName="name" class="form-control">
-    </div>
-
-    <div class="form-group">
-      <label for="contactAddress">Address:</label>
-      <input type="text" id="contactAddress" formControlName="address" class="form-control">
-    </div>
-
-    <div class="form-group">
-      <label for="contactEmail">Email:</label>
-      <input type="email" id="contactEmail" formControlName="email" class="form-control">
-    </div>
-
-    <div class="form-group">
-      <label for="contactEmail">Phone:</label>
-      <input type="email" id="contactPhone" formControlName="phone" class="form-control">
-    </div>
-  </div>
-
-  <h2>About me</h2>
-
-  <div class="form-group">
-    <label for="title">About me:</label>
-    <input type="text" id="title" formControlName="title" required class="form-control">
-  </div>
-
-  <div class="form-group">
-    <label for="createdDate">Created Date:</label>
-    <input type="date" id="createdDate" formControlName="createdDate" class="form-control">
-  </div>
-
-  <div class="form-group">
-    <label for="lastUpdated">Last Updated:</label>
-    <input type="date" id="lastUpdated" formControlName="lastUpdated" class="form-control">
-  </div>
-
-  <div class="form-check">
-    <input type="checkbox" id="isPublic" formControlName="isPublic" class="form-check-input">
-    <label for="isPublic" class="form-check-label">Is Public</label>
-  </div>
-
-  <h2>Education</h2>
-  <div formArrayName="education">
-    <div *ngFor="let edu of educationControls; let i = index" [formGroupName]="i">
-      <div class="form-group">
-        <label for="institution">Institution:</label>
-        <input type="text" id="institution" formControlName="institution" class="form-control">
-      </div>
-
-      <div class="form-group">
-        <label for="degree">Degree:</label>
-        <input type="text" id="degree" formControlName="degree" class="form-control">
-      </div>
-
-      <div class="form-group">
-        <label for="startDate">Start Date:</label>
-        <input type="date" id="startDate" formControlName="startDate" class="form-control">
-      </div>
-
-      <div class="form-group">
-        <label for="endDate">End Date:</label>
-        <input type="date" id="endDate" formControlName="endDate" class="form-control">
-      </div>
-
-      <div class="form-group">
-        <label for="description">Description:</label>
-        <textarea id="description" formControlName="description" class="form-control"></textarea>
-      </div>
-    </div>
-  </div>
-
-  <!-- Repeat a similar structure for Experience, Skills, Certifications, and References sections -->
-
-  <div class="form-group">
-    <label for="skills">Skills (comma-separated):</label>
-    <input type="text" id="skills" formControlName="skills" class="form-control">
-  </div>
-
-  <div class="form-group">
-    <label for="languages">Languages (comma-separated):</label>
-    <input type="text" id="languages" formControlName="languages" class="form-control">
-  </div>
-
-  <h2>Certifications</h2>
-  <div formArrayName="certifications">
-    <div *ngFor="let cert of certificationControls; let i = index" [formGroupName]="i">
-      <div class="form-group">
-        <label for="name">Name:</label>
-        <input type="text" id="name" formControlName="name" class="form-control">
-      </div>
-
-      <div class="form-group">
-        <label for="issuer">Issuer:</label>
-        <input type="text" id="issuer" formControlName="issuer" class="form-control">
-      </div>
-
-      <div class="form-group">
-        <label for="date">Date:</label>
-        <input type="date" id="date" formControlName="date" class="form-control">
-      </div>
-    </div>
-  </div>
-
-  <h2>References</h2>
-  <div formArrayName="references">
-    <div *ngFor="let ref of referencesControls; let i = index" [formGroupName]="i">
-      <div class="form-group">
-        <label for="name">Name:</label>
-        <input type="text" id="name" formControlName="name" class="form-control">
-      </div>
-
-      <div class="form-group">
-        <label for="position">Position:</label>
-        <input type="text" id="position" formControlName="position" class="form-control">
-      </div>
-
-      <div class="form-group">
-        <label for="contact">Contact:</label>
-        <input type="text" id="contact" formControlName="contact" class="form-control">
-      </div>
-    </div>
-  </div>
-
-  <button type="submit" (click)="onSubmit()" class="btn btn-primary">Submit</button>
-</form>
