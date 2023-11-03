@@ -1,24 +1,3 @@
-
-
-<style>
-  /* Custom styles for A4 paper size */
-  body {
-      background-color: #f0f0f0; /* Background color for the entire page */
-  }
-
-  .cv {
-    width: 21cm;
-    min-height: 29.7cm;
-    margin: 0 auto; /* Center the CV on the page */
-    background-color: gray; /* Background color for the entire CV */
-  }
-
-  .left-side {
-    min-height: 29.7cm;
-    background-color: rgb(179, 72, 72); /* Background color for the left-side */
-  }
-</style>
-
 <div class=" my-4 border cv">
   <form [formGroup]="cvForm" (ngSubmit)="onSubmit" class="container">
 
@@ -27,11 +6,11 @@
       <img src="assets/profileImage.jpeg" class="mt-5 mb-3 rounded-circle img-thumbnail" alt="...">
 
       <!-- Display contact information -->
-      <div class="contact-info">
-          <h2>Contact</h2>
+      <div>
+          <h2 class="heading">Contact</h2>
           <div formGroupName="contactInfo">
           <div class="form-group input-group-sm pb-3">
-            <input type="text" placeholder="Full name" formControlName="name" class="form-control">
+            <input type="text" #box (keyup)="onKey(box.value)" placeholder="Full name" formControlName="name" class="form-control">
           </div>
 
           <div class="form-group input-group-sm pb-3">
@@ -48,10 +27,10 @@
         </div>
       </div>
       <!-- Display skills -->
-      <div class="skills">
+      <div>
         <div class="row">
           <div class="col-6">
-            <h2 class="">Skills</h2>
+            <h2 class="heading">Skills</h2>
           </div>
         </div>
         <hr>
@@ -84,10 +63,10 @@
       </div>
       <!-- Display languages -->
 
-      <div class="languages">
+      <div>
         <div class="row py-2">
           <div class="col-6">
-            <h2 class="">Languages</h2>
+            <h2 class="heading">Languages</h2>
           </div>
         </div>
         <hr>
@@ -121,10 +100,12 @@
     </div>
     <div class="col-md-8 bg-light">
       <!-- Display full name -->
-      <h1 class="text-center my-4">{{ cvData?.contactInfo?.name }}</h1>
+      <h1 class="text-center my-4" *ngIf="name">{{ name }}</h1>
+      <h1 class="text-center my-4" *ngIf="!name">Your name</h1>
+
       <!-- Display about me -->
-      <div class="about-me">
-        <h2>About me</h2>
+      <div>
+        <h2 class="heading">About me</h2>
         <hr>
         <div class="form-group">
           <textarea placeholder="About me..." formControlName="aboutMe" required class="form-control"></textarea>
@@ -135,7 +116,7 @@
       <!-- Display education -->
 
       <div formArrayName="education">
-        <h2>Education</h2>
+        <h2 class="heading">Education</h2>
         <hr>
         <div *ngFor="let education of educationControls; let i = index" [formGroupName]="i">
           <div class="row">
@@ -180,7 +161,7 @@
       <!-- Display experience -->
 
       <div formArrayName="experience">
-        <h2>Experience</h2>
+        <h2 class="heading">Experience</h2>
         <hr>
         <div *ngFor="let experience of experienceControls; let i = index" [formGroupName]="i">
           <div class="row">
@@ -225,7 +206,7 @@
       <!-- Display certifications -->
 
       <div formArrayName="certifications">
-        <h2>Certifications</h2>
+        <h2 class="heading">Certifications</h2>
         <hr>
         <div *ngFor="let certificate of certificationControls; let i = index" [formGroupName]="i">
           <div class="row">
@@ -263,7 +244,7 @@
       <!-- Display references -->
 
       <div formArrayName="references">
-        <h2>References</h2>
+        <h2 class="heading">References</h2>
         <hr>
         <div *ngFor="let reference of referencesControls; let i = index" [formGroupName]="i">
           <div class="row">

@@ -1,0 +1,20 @@
+  /* Custom styles for A4 paper size */
+  body {
+    background-color: #f0f0f0; /* Background color for the entire page */
+}
+
+.cv {
+  width: 21cm;
+  min-height: 29.7cm;
+  margin: 0 auto; /* Center the CV on the page */
+  background-color: gray; /* Background color for the entire CV */
+}
+
+.left-side {
+  min-height: 29.7cm;
+  background-color: rgb(179, 72, 72); /* Background color for the left-side */
+}
+
+.heading{
+  margin-top: 2rem;
+}

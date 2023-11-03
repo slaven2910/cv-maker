@@ -11,6 +11,10 @@ export class CvFormComponent implements OnInit {
   cvForm!: FormGroup;
   cvData: CV | null = null; // Initialize as null
 
+  name = '';
+  onKey(value: string) {
+    this.name = value;  
+  }
 
   get educationControls(){
     return (<FormArray>this.cvForm.get('education')).controls;
@@ -44,6 +48,11 @@ export class CvFormComponent implements OnInit {
 
   logFormData() {
     console.log('Form Data:', this.cvForm.value);
+    const formData = this.cvForm.value;
+    const cv = new CV(formData);
+
+    // Pass the cv data to the cv-preview component
+    this.cvData = cv;
   }
 
   addSkill() {
