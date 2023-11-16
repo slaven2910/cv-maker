@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const authRouter = require('./src/routes/auth');
+const cvRoutes = require('./src/routes/cv');
 const path = require('path');
 
 const app = express();
@@ -16,7 +17,7 @@ const mongoPW = process.env.MONGO_DB_PASSWORD;
 const mongoURI = `mongodb+srv://slaven2910:${mongoPW}@cvmakercluster.ivmello.mongodb.net/?retryWrites=true&w=majority`;
 
 mongoose
-  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, serverSelectionTimeoutMS: 30000  })
   .then(() => {
     console.log('Connected to MongoDB');
   })
@@ -40,6 +41,8 @@ const healthController = require('./src/controllers/healthController');
 // Set up the route
 app.use('/api/health', healthRoute);
 app.use('/auth', authRouter);
+app.use('/cv', cvRoutes);
+
 
 app.get('/', (req, res) => {
   res.send('CV Maker API is running.');

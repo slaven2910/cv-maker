@@ -38,6 +38,7 @@ exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
+    console.log(123)
     // Find the user by username
     const user = await User.findOne({ username });
 

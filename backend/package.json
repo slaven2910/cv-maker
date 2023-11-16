@@ -4,8 +4,9 @@
   "description": "A backend for the CV Maker application",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "npm test"
-  },
+  },  
   "repository": {
     "type": "git",
     "url": "git+https://github.com/slaven2910/cv-maker.git"

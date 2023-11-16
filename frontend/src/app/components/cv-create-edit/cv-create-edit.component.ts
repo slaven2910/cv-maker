@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
-import { CV } from './../../models/cv.model';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
+import { CV } from '../../models/cv.model';
+import { CvService } from 'src/app/services/cv.service';
 
 @Component({
-  selector: 'app-cv-form',
-  templateUrl: './cv-form.component.html',
-  styleUrls: ['./cv-form.component.css'],
+  selector: 'app-cv-create-edit',
+  templateUrl: './cv-create-edit.component.html',
+  styleUrls: ['./cv-create-edit.component.css'],
 })
-export class CvFormComponent implements OnInit {
+export class CvCreateEditComponent implements OnInit {
+  @Input() cvId: string | null = null;
   cvForm!: FormGroup;
-  cvData: CV | null = null; // Initialize as null
+  cvData: CV | null = null; 
+
 
   name = '';
   onKey(value: string) {
@@ -40,25 +43,82 @@ export class CvFormComponent implements OnInit {
     return (<FormArray>this.cvForm.get('languages')).controls;
   }
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: FormBuilder, private cvService: CvService) {}
 
   ngOnInit(): void {
     this.buildCvForm();
+
+    if (this.cvId) {
+      // In Edit mode, load the existing CV data
+      this.cvService.getCV(this.cvId).subscribe(
+        (cv: CV) => {
+          // Populate the form with the existing CV data
+          this.cvForm.patchValue(cv);
+        },
+        (error) => {
+          // Handle error fetching existing CV data
+        }
+      );
+    }
   }
 
-  logFormData() {
-    console.log('Form Data:', this.cvForm.value);
+   onSubmit() {
     const formData = this.cvForm.value;
-    const cv = new CV(formData);
-
-    // Pass the cv data to the cv-preview component
-    this.cvData = cv;
+    if (!this.cvId) {
+      // Create mode
+      this.cvService.createCV(formData).subscribe(
+        (response) => {
+          // Handle success response
+          console.log('CV data created successfully', response);
+          // You can also reset the form or perform any other actions here.
+        },
+        (error) => {
+          // Handle error response
+          console.error('Error creating CV data', error);
+        }
+      );
+    } else {
+      // Edit mode
+      this.cvService.updateCV(this.cvId, formData).subscribe(
+        (response) => {
+          // Handle success response
+          console.log('CV data updated successfully', response);
+          // You can also reset the form or perform any other actions here.
+        },
+        (error) => {
+          // Handle error response
+          console.error('Error updating CV data', error);
+        }
+      );
+    }
   }
+
+  onCreateCV() {
+      const formData = this.cvForm.value;
+  
+      // Send the CV data to the backend using the CvService
+      this.cvService.createCV(formData).subscribe(
+        (response) => {
+          // Handle success response
+          console.log('CV data sent successfully', response);
+          // You can also reset the form or perform any other actions here.
+        },
+        (error) => {
+          // Handle error response
+          console.error('Error sending CV data', error);
+        }
+      );
+  }
+  
 
   addSkill() {
-    (this.cvForm.get('skills') as FormArray).push(new FormGroup({
-      'skill': new FormControl()
-    }));
+    const skillValue = (this.cvForm.get('skills') as FormArray).at(0).get('value')?.value;
+    if (skillValue) {
+      (this.cvForm.get('skills') as FormArray).push(new FormGroup({
+        'type': new FormControl('Skill'),
+        'value': new FormControl(skillValue)
+      }));
+    }
   }
 
   removeSkill(index: number) {
@@ -68,11 +128,17 @@ export class CvFormComponent implements OnInit {
     }
   }
 
+  
   addLanguage() {
-    (this.cvForm.get('languages') as FormArray).push(new FormGroup({
-      'language': new FormControl()
-    }));
+    const languageValue = (this.cvForm.get('languages') as FormArray).at(0).get('value')?.value;
+    if (languageValue) {
+      (this.cvForm.get('languages') as FormArray).push(new FormGroup({
+        'type': new FormControl('Language'),
+        'value': new FormControl(languageValue)
+      }));
+    }
   }
+  
 
   removeLanguage(index: number) {
     const languageArray = this.cvForm.get('languages') as FormArray;
@@ -147,10 +213,10 @@ export class CvFormComponent implements OnInit {
     this.cvForm = this.formBuilder.group({
       aboutMe: new FormControl(''),
       contactInfo: this.formBuilder.group({
-        name: new FormControl(''),
+        name: new FormControl('', [Validators.required]),
         address: new FormControl(''),
-        email: new FormControl(''),
-        phone: new FormControl(''),
+        email: new FormControl('', [Validators.required, Validators.email]),
+        phone: new FormControl('', [Validators.pattern('[0-9]*')]),
       }),
       education: this.formBuilder.array([
         this.createEducationGroup(),
@@ -159,14 +225,10 @@ export class CvFormComponent implements OnInit {
         this.createExperienceGroup(),
       ]),
       skills: this.formBuilder.array([
-        this.formBuilder.group({
-          skill: new FormControl(''),
-        })
+        this.createSkillGroup(),
       ]),
       languages: this.formBuilder.array([
-        this.formBuilder.group({
-          language: new FormControl(''),
-        })
+        this.createLanguageGroup(),
       ]),
       certifications: this.formBuilder.array([
         this.createCertificationGroup(),
@@ -174,6 +236,20 @@ export class CvFormComponent implements OnInit {
       references: this.formBuilder.array([
         this.createReferenceGroup(),
       ]),
+    });
+  }
+
+  createSkillGroup() {
+    return this.formBuilder.group({
+      type: 'Skill',
+      value: '',
+    });
+  }
+  
+  createLanguageGroup() {
+    return this.formBuilder.group({
+      type: 'Language',
+      value: '',
     });
   }
 
@@ -186,7 +262,7 @@ export class CvFormComponent implements OnInit {
       description: new FormControl(''),
     });
   }
-
+  
   createExperienceGroup() {
     return this.formBuilder.group({
       company: new FormControl(''),
@@ -196,7 +272,7 @@ export class CvFormComponent implements OnInit {
       description: new FormControl(''),
     });
   }
-
+  
   createCertificationGroup() {
     return this.formBuilder.group({
       name: new FormControl(''),
@@ -204,20 +280,12 @@ export class CvFormComponent implements OnInit {
       date: new FormControl(''),
     });
   }
-
+  
   createReferenceGroup() {
     return this.formBuilder.group({
       name: new FormControl(''),
       position: new FormControl(''),
       contact: new FormControl(''),
     });
-  }
-
-  onSubmit() {
-    const formData = this.cvForm.value;
-    const cv = new CV(formData);
-
-    // Pass the cv data to the cv-preview component
-    this.cvData = cv;
   }
 }

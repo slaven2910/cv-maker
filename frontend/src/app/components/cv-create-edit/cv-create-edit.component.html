@@ -11,18 +11,30 @@
           <div formGroupName="contactInfo">
           <div class="form-group input-group-sm pb-3">
             <input type="text" #box (keyup)="onKey(box.value)" placeholder="Full name" formControlName="name" class="form-control">
+            <div *ngIf="cvForm.get('contactInfo.name')?.hasError('required') && cvForm.get('contactInfo.name')?.touched" class="text-warning">
+              Name is required.
+            </div>
           </div>
 
           <div class="form-group input-group-sm pb-3">
-            <input type="text" placeholder="Address" formControlName="address" class="form-control">
+            <input type="text" placeholder="Address" formControlName="address" class="form-control">   
           </div>
 
           <div class="form-group input-group-sm pb-3">
             <input type="email" placeholder="Email" formControlName="email" class="form-control">
+            <div *ngIf="cvForm.get('contactInfo.email')?.hasError('required') && cvForm.get('contactInfo.email')?.touched" class="text-warning">
+              Email is required.
+            </div> 
+            <div *ngIf="cvForm.get('contactInfo.email')?.hasError('email') && cvForm.get('contactInfo.email')?.touched" class="text-warning">
+              Invalid email address.
+            </div>      
           </div>
 
           <div class="form-group input-group-sm pb-3">
-            <input type="email" placeholder="Phone" formControlName="phone" class="form-control">
+            <input type="text" placeholder="Phone" formControlName="phone" class="form-control">
+            <div *ngIf="cvForm.get('contactInfo.phone')?.hasError('pattern') && cvForm.get('contactInfo.phone')?.touched" class="text-warning">
+              Invalid phone number format.
+            </div>
           </div>
         </div>
       </div>
@@ -39,7 +51,10 @@
             <div class="row">
               <div class="col-md-8">
                 <div class="py-1">
-                  <input type="text" placeholder="e.g. Programming" formControlName="skill" class="form-control">
+                  <input type="text" placeholder="e.g. Programming" formControlName="value" class="form-control">
+                  <div *ngIf="cvForm.get('skills.' + i + '.value')?.hasError('required') && cvForm.get('skills.' + i + '.value')?.touched" class="text-warning">
+                    Skill is required.
+                  </div>
                 </div>
               </div>
                 <div class="col-md-2">
@@ -75,7 +90,10 @@
             <div class="row">
               <div class="col-md-8">
                 <div class="py-1">
-                  <input type="text" placeholder="e.g. German" formControlName="language" class="form-control">
+                  <input type="text" placeholder="e.g. German" formControlName="value" class="form-control">
+                  <div *ngIf="cvForm.get('languages.' + i + '.value')?.hasError('required') && cvForm.get('languages.' + i + '.value')?.touched" class="text-warning">
+                    At least one language is required.
+                  </div>
                 </div>
               </div>
               <div class="col-md-2">
@@ -110,7 +128,6 @@
         <div class="form-group">
           <textarea placeholder="About me..." formControlName="aboutMe" required class="form-control"></textarea>
         </div>
-        <p>{{ cvData?.aboutMe }}</p>
       </div>
 
       <!-- Display education -->
@@ -283,7 +300,7 @@
 
   <div class="row">
     <div class="col-md-12 text-center my-3">
-      <button type="button" class="btn btn-primary" (click)="logFormData()">Log Form Data</button>
+      <button type="submit" class="btn btn-primary" (click)="onCreateCV()" [disabled]="cvForm.invalid">Create</button>
     </div>
   </div>
   </form>

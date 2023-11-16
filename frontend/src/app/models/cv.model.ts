@@ -1,5 +1,5 @@
 export class CV {
-
+  id: string;
   aboutMe: string;
   sections: CVSection[];
   createdDate?: Date;
@@ -8,13 +8,13 @@ export class CV {
   contactInfo: ContactInfo;
   education: Education[];
   experience: Experience[];
-  skills: string[];
-  languages: string[];
+  skills: CVItem[];
+  languages: CVItem[];
   certifications: Certification[];
   references: Reference[];
 
   constructor(data: any) {
-
+    this.id = data.id;
     this.aboutMe = data?.aboutMe;
     this.sections = (data?.sections || []).map((sectionData: any) => new CVSection(sectionData));
     this.createdDate = data?.createdDate;
@@ -23,8 +23,8 @@ export class CV {
     this.contactInfo = new ContactInfo(data?.contactInfo);
     this.education = (data?.education || []).map((educationData: any) => new Education(educationData));
     this.experience = (data?.experience || []).map((experienceData: any) => new Experience(experienceData));
-    this.skills = data?.skills || [];
-    this.languages = data?.languages || [];
+    this.skills = (data?.skills || []).map((skillsData: any) => new CVItem(skillsData));
+    this.languages = (data?.languages || []).map((languagesData: any) => new CVItem(languagesData));
     this.certifications = (data?.certifications || []).map((certificationData: any) => new Certification(certificationData));
     this.references = (data?.references || []).map((referenceData: any) => new Reference(referenceData));
   }
